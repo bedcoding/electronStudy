@@ -44,9 +44,10 @@
         </div>
     </div>
 
-    <!-- index.js에서 보낸 데이터 받아서 index.html에 띄우기: 브라우저 윈도우에서도 ipcRender를 받을 수 있도록 처리 -->
+    <!-- ipcRenderer: index.js에서 보낸 데이터 받아서 index.html에 띄우기: 브라우저 윈도우에서도 ipcRender를 받을 수 있도록 처리 -->
+    <!-- clipboard: 북마크에 리스트를 추가하기 위해 Ctrl+V 이벤트를 받는다 -->
     <script>
-        const {ipcRenderer} = require('electron');
+        const {ipcRenderer, clipboard} = require('electron');
         let type = 'home';  // 현재 버튼 리스트에 어떤 타입의 리스트가 나오는지 알기 위해 전역에 선언 -> 초기 타입은 home으로
         let data = [];      // 업데이트를 통해 받아온 데이터를 보관할 전역변수 데이터 선언
 
@@ -98,6 +99,20 @@
             const html = htmls.join('');
             document.querySelector('#data').innerHTML = html;
         }
+
+        // 북마크에 리스트를 추가하기 위해 Ctrl+V 이벤트를 받는다.
+        document.addEventListener('paste', () => {
+            // 일렉트론에서 제공하는 클립보드 모듈
+            const text = clipboard.readText();
+
+            // 어느 버튼이 눌러진 상태에서 Ctrl+V를 하고 있는지 확인하기 위해 type도 함께 보내줘야 한다
+            const item = {
+                type: type,
+                url: text
+            }
+
+            ipcRenderer.send('paste', item);  // ipcRenderer.send('paste', text); 라는 코드를 type까지 포함한 item을 보내도록 수정
+        })
     </script>
 </body>
 

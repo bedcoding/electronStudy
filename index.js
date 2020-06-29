@@ -1,7 +1,10 @@
 // 렌더러 프로세서: UI 관장
 // 메인 프로세서: 데이터 관장
 // 메인 프로세서에서 샘플 데이터를 만들어서 렌더러 프로세서로 보내는 작업을 먼저 진행
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog} = require('electron');
+const request = require('superagent');
+const getTitle = require('get-title');
+
 const data = [
     {
         type: 'home',
@@ -47,5 +50,31 @@ app.on('ready', () => {
     win.once('ready-to-show', () => {
         win.show();                             // 3. ready-to-show 이벤트가 불리면 다시 윈도우가 show 될 수 있도록 처리
         win.webContents.send('update', data);   // 4. index.html에 데이터 보내기
+    });
+
+    // Ctrl + V로 주소를 붙여넣기하는 경우 처리하는 구간
+    ipcMain.on('paste', (event, item) => {        
+        // npm i superagent get-title -S
+        // url이 http인지 https인지 확인 -> 프로토콜이 둘 다 아니면 다이얼로그로 경고 띄움
+        if(item.url.indexOf('http://') > -1 || item.url.indexOf('https://') > -1) {
+            const type = item.type;
+            const url = item.url;
+
+            request.get(url)
+                .end((err, response) => {
+                    const contents = response.res.text;
+                    getTitle(contents).then(title => {
+                        data.push({type, url, title})          // title과 앞에서 얻어온 type, url을 넣어줌
+                        win.webContents.send('update', data);  // 새로 추가된 데이터를 다시 렌더러 프로세서로 넘겨준다.
+                    });
+                });
+        }
+
+        else {
+            dialog.showErrorBox('경고', '유효한 url이 아님');
+        }
     })
+
+
+    
 });
