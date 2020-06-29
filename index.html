@@ -26,12 +26,12 @@
         </header>
         <div class="window-content">
             <div class="pane-group">
-                <ul class="list-group">
+                <ul class="list-group" id="data">
                     <li class="list-group-item">
                       <div class="media-body">
-                        <strong><a href="#"> https://github.com </a> </strong>
+                        <strong><a href="#"> 테스트링크 </a> </strong>
                         <p>
-                            타이틀
+                            테스트
                             <span class="icon icon-trash pull-right"></span> <!-- 휴지통 아이콘 -->
                         </p>
                       </div>
@@ -40,6 +40,31 @@
             </div>
         </div>
     </div>
+
+    <!-- index.js에서 보낸 데이터 받아서 index.html에 띄우기: 브라우저 윈도우에서도 ipcRender를 받을 수 있도록 처리 -->
+    <script>
+        const {ipcRenderer} = require('electron');
+        ipcRenderer.on('update', (event, data) => {
+            console.log(data);  // 데이터가 제대로 들어오는지 확인
+            
+            // 이렇게 받은 데이터를 dom으로 생성하여 리스트로 받기 (html 형태로 바꿈)
+            const htmls = data.map(item => {
+                return `
+                    <li class="list-group-item">
+                        <div class="media-body">
+                        <strong><a href="#"> ${item.url} </a> </strong>
+                        <p>
+                            ${item.title}
+                            <span class="icon icon-trash pull-right"></span> <!-- 휴지통 아이콘 -->
+                        </p>
+                        </div>
+                    </li>
+                `;
+            });
+            const html = htmls.join('');
+            document.querySelector('#data').innerHTML = html;
+        })
+    </script>
 </body>
 
 </html>

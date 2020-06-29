@@ -1,5 +1,5 @@
 {
-  "name": "electron-basic-Bookmark",
+  "name": "electron_study",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "browserify": "^16.5.1",
     "electron": "^9.0.5",
-    "photonkit": "^0.1.2"
+    "photonkit": "^0.1.2",
+    "requirejs": "^2.3.6"
   }
 }
