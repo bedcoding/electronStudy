@@ -50,68 +50,37 @@
         let type = 'home';  // 현재 버튼 리스트에 어떤 타입의 리스트가 나오는지 알기 위해 전역에 선언 -> 초기 타입은 home으로
         let data = [];      // 업데이트를 통해 받아온 데이터를 보관할 전역변수 데이터 선언
 
-        ipcRenderer.on('update', (event, _data) => {
-            data = _data;  // 업데이트 채널을 통해 들어온 데이터를 전역에 데이터를 저장
-
-            // 이렇게 받은 데이터를 dom으로 생성하여 리스트로 받기 (html 형태로 바꿈) -> filter 함수를 통해 item의 타입과 전역의 타입이 같은 것만 골라냄
-            const htmls = data.filter(item => item.type === type).map(item => {
-                return `
-                    <li class="list-group-item">
-                        <div class="media-body">
-                        <strong> <a href="#"> ${item.url} </a> </strong>
-                        <p>
-                            ${item.title}
-                            <span class="icon icon-trash pull-right"></span> <!-- 휴지통 아이콘 -->
-                        </p>
-                        </div>
-                    </li>
-                `;
-            });
-            const html = htmls.join('');
-            document.querySelector('#data').innerHTML = html;
-        })
-
         // 버튼 id를 만든 뒤 querySelector를 통해 dom을 가져오도록 함
         const btnHome = document.querySelector('#btn-home');
         const btnGithub = document.querySelector('#btn-github');
 
+        // 버튼 초기값 설정: 처음에는 home에 active를 시킨다.
+        btnHome.classList.add('active');        // 어떤 버튼이 클릭되었는지 확인하기 위한 작업
+        btnGithub.classList.remove('active');   // 만약 다른 버튼이 클릭되어 있었다면 버튼눌림 이벤트를 제거
+
+        ipcRenderer.on('update', (event, _data) => {
+            data = _data;  // 업데이트 채널을 통해 들어온 데이터를 전역에 데이터를 저장
+            update();      // (공통기능이라 함수로 뺌) 리스트를 생성하는 구간
+        })
+
         // 각각의 버튼에 클릭 이벤트를 바인딩
         btnHome.addEventListener('click', () => {
-            console.log("home 클릭함");
             btnHome.classList.add('active');       // 어떤 버튼이 클릭되었는지 확인하기 위한 작업
             btnGithub.classList.remove('active');  // 만약 다른 버튼이 클릭되어 있었다면 버튼눌림 이벤트를 제거
-
-            // 클릭과 동시에 전역 변수 변경
-            type = 'home';
-
-            // 이 버튼을 눌렀을 때 리스트를 재생성하는 구간
-            const htmls = data.filter(item => item.type === type).map(item => {
-                return `
-                    <li class="list-group-item">
-                        <div class="media-body">
-                        <strong> <a href="#"> ${item.url} </a> </strong>
-                        <p>
-                            ${item.title}
-                            <span class="icon icon-trash pull-right"></span> <!-- 휴지통 아이콘 -->
-                        </p>
-                        </div>
-                    </li>
-                `;
-            });
-            const html = htmls.join('');
-            document.querySelector('#data').innerHTML = html;
+            type = 'home';    // 클릭과 동시에 전역 변수 변경
+            update();         // (공통기능이라 함수로 뺌) 이 버튼을 눌렀을 때 리스트를 재생성하는 구간
         });
 
 
         btnGithub.addEventListener('click', () => {
-            console.log("github 클릭함");
             btnGithub.classList.add('active');    // 어떤 버튼이 클릭되었는지 확인하기 위한 작업
             btnHome.classList.remove('active');   // 만약 다른 버튼이 클릭되어 있었다면 버튼눌림 이벤트를 제거
+            type = 'github';  // 클릭과 동시에 전역 변수 변경
+            update();         // (공통기능이라 함수로 뺌) 이 버튼을 눌렀을 때 리스트를 재생성하는 구간
+        });
 
-            // 클릭과 동시에 전역 변수 변경
-            type = 'github';
-
-            // 이 버튼을 눌렀을 때 리스트를 재생성하는 구간
+        // 버튼을 눌렀을 때 리스트를 재생성하는 구간 (공통기능이라 함수로 뺌)
+        function update() {
             const htmls = data.filter(item => item.type === type).map(item => {
                 return `
                     <li class="list-group-item">
@@ -125,13 +94,10 @@
                     </li>
                 `;
             });
+
             const html = htmls.join('');
             document.querySelector('#data').innerHTML = html;
-        });
-
-        // 초기값 설정: 처음에는 home에 active를 시킨다.
-        btnHome.classList.add('active');        // 어떤 버튼이 클릭되었는지 확인하기 위한 작업
-        btnGithub.classList.remove('active');   // 만약 다른 버튼이 클릭되어 있었다면 버튼눌림 이벤트를 제거
+        }
     </script>
 </body>
 
