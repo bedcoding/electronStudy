@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title> 타이틀 </title>
+    <link rel="stylesheet" href="node_modules/photonkit/dist/css/photon.css"> <!-- npm i photonkit -S로 설치: 이미 만들어진 디자인을 끌어쓴다. -->
+</head>
+
+<body>
+    <!-- http://photonkit.com/getting-started/ 여기서 기본틀 가져옴 -->
+    <div class="window">
+        <header class="toolbar toolbar-header">
+            <div class="toolbar-actions">
+                <h1 class="title"> 북마크 </h1>
+                <div class="btn-group">
+                    <button class="btn btn-default">
+                        <!-- http://photonkit.com/components/ 하단에 아이콘 리스트 나옴 -->
+                        <span class="icon icon-home"></span>
+                    </button>
+                    <button class="btn btn-default">
+                        <span class="icon icon-github"></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <div class="window-content">
+            <div class="pane-group">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                      <div class="media-body">
+                        <strong><a href="#"> https://github.com </a> </strong>
+                        <p>
+                            타이틀
+                            <span class="icon icon-trash pull-right"></span> <!-- 휴지통 아이콘 -->
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "electron-basic-Bookmark",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^9.0.5",
+    "photonkit": "^0.1.2"
+  }
+}
