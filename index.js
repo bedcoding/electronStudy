@@ -4,19 +4,19 @@
 const {app, BrowserWindow} = require('electron');
 const data = [
     {
-        type: 'home1',
+        type: 'home',
         url: 'https://github.com',
         title: '타이틀1'
     },
 
     {
-        type: 'home2',
+        type: 'github',
         url: 'https://github.com',
         title: '타이틀2'
     },
 
     {
-        type: 'home3',
+        type: 'github',
         url: 'https://github.com',
         title: '타이틀3'
     },
